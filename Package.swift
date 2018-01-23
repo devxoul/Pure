@@ -8,5 +8,6 @@ let package = Package(
   products: [.library(name: "Pure", targets: ["Pure"])],
   targets: [
     .target(name: "Pure", dependencies: []),
+    .target(name: "Example", dependencies: ["Pure"]),
   ]
 )
