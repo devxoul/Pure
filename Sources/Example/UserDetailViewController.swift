@@ -19,7 +19,7 @@ class UserDetailViewController: FactoryModule {
 
 extension Factory where Module == UserDetailViewController {
   func create(payload: UserDetailViewReactor.Payload) -> Module {
-    let reactor = self.dependency().reactorFactory.create(payload: payload)
-    return Module(dependency: self.dependency(), payload: .init(reactor: reactor))
+    let reactor = self.dependency.reactorFactory.create(payload: payload)
+    return Module(dependency: self.dependency, payload: .init(reactor: reactor))
   }
 }
