@@ -24,12 +24,14 @@ public class Factory<Module: FactoryModule> {
 }
 
 public extension Factory where Module.Dependency == Void {
+  /// Creates an instance of `Factory`.
   public convenience init() {
     self.init(dependency: Void())
   }
 }
 
 public extension Factory where Module.Payload == Void {
+  /// Creates an instance of a module.
   public func create() -> Module {
     return Module.init(dependency: self.dependency, payload: Void())
   }

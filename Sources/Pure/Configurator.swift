@@ -25,12 +25,14 @@ public class Configurator<Module: ConfiguratorModule> {
 }
 
 public extension Configurator where Module.Dependency == Void {
+  /// Creates an instance of `Configurator`.
   public convenience init() {
     self.init(dependency: Void())
   }
 }
 
 public extension Configurator where Module.Payload == Void {
+  /// Configures an existing module instance.
   public func configure(_ module: Module) {
     module.configure(dependency: self.dependency, payload: Void())
   }

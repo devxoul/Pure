@@ -9,18 +9,21 @@ public protocol FactoryModule: Module {
 }
 
 public extension FactoryModule where Dependency == Void {
+  /// Creates an instance of a module with a payload.
   public init(payload: Payload) {
     self.init(dependency: Void(), payload: payload)
   }
 }
 
 public extension FactoryModule where Payload == Void {
+  /// Creates an instance of a module with a dependency.
   public init(dependency: Dependency) {
     self.init(dependency: dependency, payload: Void())
   }
 }
 
 public extension FactoryModule where Dependency == Void, Payload == Void {
+  /// Creates an instance of a module.
   public init() {
     self.init(dependency: Void(), payload: Void())
   }
