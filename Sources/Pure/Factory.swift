@@ -1,10 +1,10 @@
 /// A generic factory. It is constructed with a static dependency and creates a module instance
 /// with a runtime parameter.
-public class Factory<Module: FactoryModule> {
+open class Factory<Module: FactoryModule> {
   private let dependencyClosure: () -> Module.Dependency
 
   /// A static dependency of a module.
-  public var dependency: Module.Dependency {
+  open var dependency: Module.Dependency {
     return self.dependencyClosure()
   }
 
@@ -18,7 +18,7 @@ public class Factory<Module: FactoryModule> {
   /// Creates an instance of a module with a runtime parameter.
   ///
   /// - parameter payload: A runtime parameter which is required to construct a module.
-  public func create(payload: Module.Payload) -> Module {
+  open func create(payload: Module.Payload) -> Module {
     return Module.init(dependency: self.dependency, payload: payload)
   }
 }
@@ -34,32 +34,5 @@ public extension Factory where Module.Payload == Void {
   /// Creates an instance of a module.
   public func create() -> Module {
     return Module.init(dependency: self.dependency, payload: Void())
-  }
-}
-
-
-// MARK: - Test Support
-
-public extension Factory {
-  public static func stub(_ closure: @autoclosure @escaping () -> Module? = nil) -> StubFactory<Module> {
-    return StubFactory(closure: closure)
-  }
-}
-
-public class StubFactory<Module: FactoryModule>: Factory<Module> {
-  private let closure: () -> Module?
-
-  @available(*, unavailable)
-  public override var dependency: Module.Dependency {
-    return super.dependency
-  }
-
-  fileprivate init(closure: @escaping () -> Module?) {
-    self.closure = closure
-    super.init(dependency: nil as Module.Dependency!)
-  }
-
-  override public func create(payload: Module.Payload) -> Module {
-    return self.closure() as Module!
   }
 }
