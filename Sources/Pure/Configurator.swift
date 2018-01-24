@@ -1,6 +1,6 @@
 /// A generic configurator. It is constructed with a static dependency and configures an existing
 /// module instance with a runtime parameter.
-public struct Configurator<Module: ConfiguratorModule> {
+public class Configurator<Module: ConfiguratorModule> {
   private let dependencyClosure: () -> Module.Dependency
 
   /// A static dependency of a module.
@@ -25,7 +25,7 @@ public struct Configurator<Module: ConfiguratorModule> {
 }
 
 public extension Configurator where Module.Dependency == Void {
-  public init() {
+  public convenience init() {
     self.init(dependency: Void())
   }
 }
@@ -33,5 +33,34 @@ public extension Configurator where Module.Dependency == Void {
 public extension Configurator where Module.Payload == Void {
   public func configure(_ module: Module) {
     module.configure(dependency: self.dependency, payload: Void())
+  }
+}
+
+
+// MARK: Test Support
+
+public extension Configurator {
+  public static func stub(_ closure: @escaping StubConfigurator<Module>.Closure = { _, _ in }) -> StubConfigurator<Module> {
+    return StubConfigurator(closure: closure)
+  }
+}
+
+public final class StubConfigurator<Module: ConfiguratorModule>: Configurator<Module> {
+  public typealias Closure = (Module, Module.Payload) -> Void
+
+  private let closure: Closure
+
+  @available(*, unavailable)
+  public override var dependency: Module.Dependency {
+    return super.dependency
+  }
+
+  fileprivate init(closure: @escaping Closure) {
+    self.closure = closure
+    super.init(dependency: nil as Module.Dependency!)
+  }
+
+  override public func configure(_ module: Module, payload: Module.Payload) {
+    self.closure(module, payload)
   }
 }

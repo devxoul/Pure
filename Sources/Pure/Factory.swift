@@ -1,6 +1,6 @@
 /// A generic factory. It is constructed with a static dependency and creates a module instance
 /// with a runtime parameter.
-public struct Factory<Module: FactoryModule> {
+public class Factory<Module: FactoryModule> {
   private let dependencyClosure: () -> Module.Dependency
 
   /// A static dependency of a module.
@@ -24,7 +24,7 @@ public struct Factory<Module: FactoryModule> {
 }
 
 public extension Factory where Module.Dependency == Void {
-  public init() {
+  public convenience init() {
     self.init(dependency: Void())
   }
 }
@@ -32,5 +32,32 @@ public extension Factory where Module.Dependency == Void {
 public extension Factory where Module.Payload == Void {
   public func create() -> Module {
     return Module.init(dependency: self.dependency, payload: Void())
+  }
+}
+
+
+// MARK: - Test Support
+
+public extension Factory {
+  public static func stub(_ closure: @autoclosure @escaping () -> Module? = nil) -> StubFactory<Module> {
+    return StubFactory(closure: closure)
+  }
+}
+
+public class StubFactory<Module: FactoryModule>: Factory<Module> {
+  private let closure: () -> Module?
+
+  @available(*, unavailable)
+  public override var dependency: Module.Dependency {
+    return super.dependency
+  }
+
+  fileprivate init(closure: @escaping () -> Module?) {
+    self.closure = closure
+    super.init(dependency: nil as Module.Dependency!)
+  }
+
+  override public func create(payload: Module.Payload) -> Module {
+    return self.closure() as Module!
   }
 }
