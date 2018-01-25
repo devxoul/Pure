@@ -24,6 +24,15 @@ open class Configurator<Module: ConfiguratorModule> {
   }
 }
 
+public extension Configurator where Module.Payload == Void {
+  /// Configures an existing module instance with a runtime parameter.
+  ///
+  /// - parameter module: An instance of a module to be configured.
+  public func configure(_ module: Module) {
+    self.configure(module, payload: Void())
+  }
+}
+
 public extension Configurator where Module.Dependency == Void {
   /// Creates an instance of `Configurator`.
   public convenience init() {
