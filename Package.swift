@@ -13,7 +13,8 @@ let package = Package(
   targets: [
     .target(name: "Pure", dependencies: []),
     .target(name: "PureStub", dependencies: ["Pure"]),
-    .testTarget(name: "PureTests", dependencies: ["Pure", "Quick", "Nimble"]),
-    .testTarget(name: "PureStubTests", dependencies: ["PureStub", "Quick", "Nimble"]),
+    .target(name: "TestSupport", dependencies: ["Pure"]),
+    .testTarget(name: "PureTests", dependencies: ["Pure", "TestSupport", "Quick", "Nimble"]),
+    .testTarget(name: "PureStubTests", dependencies: ["PureStub", "TestSupport", "Quick", "Nimble"]),
   ]
 )
