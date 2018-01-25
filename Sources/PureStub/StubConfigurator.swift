@@ -3,7 +3,9 @@ import Pure
 #endif
 
 public extension Configurator {
-  public static func stub(_ closure: @escaping StubConfigurator<Module>.Closure = { _, _ in }) -> StubConfigurator<Module> {
+  public static func stub(
+    _ closure: @escaping StubConfigurator<Module>.Closure = { _, _ in }
+  ) -> StubConfigurator<Module> {
     return StubConfigurator(closure: closure)
   }
 }

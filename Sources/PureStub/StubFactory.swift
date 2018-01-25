@@ -3,12 +3,14 @@ import Pure
 #endif
 
 public extension Factory {
-  public static func stub(_ closure: @autoclosure @escaping () -> Module? = nil) -> StubFactory<Module> {
+  public static func stub(
+    _ closure: @autoclosure @escaping () -> Module? = nil
+  ) -> StubFactory<Module> {
     return StubFactory(closure: closure)
   }
 }
 
-public class StubFactory<Module: FactoryModule>: Factory<Module> {
+public final class StubFactory<Module: FactoryModule>: Factory<Module> {
   private let closure: () -> Module?
 
   @available(*, unavailable)
