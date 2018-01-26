@@ -43,8 +43,8 @@ class AppDelegate {
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
     // In testing environment, `self.dependency` is already set.
     self.dependency = self.dependency ?? AppDependency.resolve()
-    self.window = self.depnedency.window
-    self.window?.rootViewController = self.depnedency.rootViewController
+    self.window = self.dependency.window
+    self.window?.rootViewController = self.dependency.rootViewController
   }
 }
 
