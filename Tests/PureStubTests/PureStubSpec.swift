@@ -6,8 +6,22 @@ import Quick
 
 final class PureStubSpec: QuickSpec {
   override func spec() {
-    describe("StubFactory.create()") {
-      it("returns an stubbed instance") {
+    describe("StubFactory.create(_ closure:)") {
+      it("returns a stubbed instance") {
+        let factory: FactoryFixture<Dependency, Payload>.Factory = .stub { payload in
+          FactoryFixture<Dependency, Payload>(
+            dependency: .init(networking: "Networking A"),
+            payload: payload
+          )
+        }
+        let instance = factory.create(payload: .init(id: 200))
+        expect(instance.dependency.networking) == "Networking A"
+        expect(instance.payload.id) == 200
+      }
+    }
+
+    describe("StubFactory.create(_ instance:)") {
+      it("returns a stubbed instance") {
         let instance1 = FactoryFixture<Dependency, Payload>(
           dependency: .init(networking: "Networking A"),
           payload: .init(id: 100)
