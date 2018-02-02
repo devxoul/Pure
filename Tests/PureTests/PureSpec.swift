@@ -1,3 +1,8 @@
+#if os(iOS) || os(tvOS)
+  import UIKit
+#elseif os(macOS)
+  import AppKit
+#endif
 import Nimble
 import Quick
 @testable import Pure
@@ -36,6 +41,15 @@ final class PureSpec: QuickSpec {
         expect(instance.dependency) == Void()
         expect(instance.payload) == Void()
       }
+
+      #if os(iOS) || os(tvOS) || os(macOS)
+      context("when it is a view controller") {
+        it("doesn't require init(dependency:payload:)") {
+          let viewController = ViewControllerFixture(dependency: "Dependency", payload: "Payload")
+          expect(viewController).toNot(beNil())
+        }
+      }
+      #endif
     }
 
     describe("a configurator module") {

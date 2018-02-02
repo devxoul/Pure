@@ -39,3 +39,21 @@ class ConfiguratorFixture<DependencyType, PayloadType>: ConfiguratorModule {
     self.payload = payload
   }
 }
+
+#if os(iOS) || os(tvOS)
+import UIKit
+
+class ViewControllerFixture: UIViewController, FactoryModule {
+  typealias Dependency = String
+  typealias Payload = String
+}
+#endif
+
+#if os(macOS)
+import AppKit
+
+class ViewControllerFixture: NSViewController, FactoryModule {
+  typealias Dependency = String
+  typealias Payload = String
+}
+#endif

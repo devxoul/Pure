@@ -28,3 +28,23 @@ public extension FactoryModule where Dependency == Void, Payload == Void {
     self.init(dependency: Void(), payload: Void())
   }
 }
+
+#if os(iOS) || os(tvOS)
+import UIKit
+
+public extension FactoryModule where Self: UIViewController {
+  init(dependency: Dependency, payload: Payload) {
+    self.init(nibName: nil, bundle: nil)
+  }
+}
+#endif
+
+#if os(macOS)
+import AppKit
+
+public extension FactoryModule where Self: NSViewController {
+  init(dependency: Dependency, payload: Payload) {
+    self.init(nibName: nil, bundle: nil)
+  }
+}
+#endif
