@@ -12,6 +12,9 @@ Pure makes [Pure DI](http://blog.ploeh.dk/2014/06/10/pure-di/) easy in Swift. Th
 * [Background](#background)
     * [Pure DI](#pure-di)
     * [Composition Root](#composition-root)
+        * [AppDependency](#appdependency)
+        * [Testing AppDelegate](#testing-appdelegate)
+        * [Seaprating AppDelegate](#separating-appdelegate)
     * [Lazy Dependency](#lazy-dependency)
         * [Using Factory](#using-factory)
         * [Using Configurator](#using-configurator)
@@ -36,53 +39,159 @@ Pure makes [Pure DI](http://blog.ploeh.dk/2014/06/10/pure-di/) easy in Swift. Th
 
 ### Composition Root
 
-The Composion Root is where the entire object graph is resolved. In a Cocoa application, the Composition Root is `AppDelegate`'s `application(_:didFinishLaunchingWithOptions:)` method. The `window` property and it's `rootViewController` property are the root dependencies. The best way to inject those dependencies is to create a struct named `AppDependency` and store both dependencies in it. Every dependencies are injected using the [Constructor Injection](https://en.wikipedia.org/wiki/Dependency_injection#Constructor_injection).
+The Composion Root is where the entire object graph is resolved. In a Cocoa application, `AppDelegate` is the Composition Root.
+
+#### AppDependency
+
+The root dependencies are the app delegate's dependency and the root view controller's dependency. The best way to inject those dependencies is to create a struct named `AppDependency` and store both dependencies in it.
 
 ```swift
 struct AppDependency {
-  let window: UIWindow
-  let rootViewController: MyViewController
+  let networking: Networking
+  let remoteNotificationService: RemoteNotificationService
+}
 
+extension AppDependency {
   static func resolve() -> AppDependency {
+    let networking = Networking()
+    let remoteNotificationService = RemoteNotificationService()
+
     return AppDependency(
-      window: UIWindow(frame: UIScreen.main.bounds),
-      rootViewController: MyViewController(
-        otherDependency: OtherDependency(
-          anotherDependency: AnotherDependency()
-        )
-      )
+      networking: networking
+      remoteNotificationService: remoteNotificationService
     )
   }
 }
 ```
 
-It is important to separate a production environment from a testing environment. We have to use an actual object in a production environment and a mock object in a testing environment. In order to separate environments, we have to conditionally resolve the app dependency. `AppDependency.resolve()` will never get called in a testing environment.
+It is important to separate a production environment from a testing environment. We have to use an actual object in a production environment and a mock object in a testing environment.
+
+AppDelegate is created automatically by the system using `init()`. In this initializer we're going to initialize the actaul app dependency with `AppDependency.resolve()`. On the other hand, we're going to provide a `init(dependency:)` to inject a mock app dependency in a testing environment.
 
 ```swift
-class AppDelegate {
-  /// In testing environment, this property is set before
-  /// `application(_: didFinishLaunchingWithOptions:)` gets called.
-  private var dependency: AppDependency!
+class AppDelegate: NSObject, UIApplicationDelegate {
+  private let dependency: AppDependency
 
-  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-    // In testing environment, `AppDependency.resolve()` will not execute.
-    self.dependency = self.dependency ?? AppDependency.resolve()
+  /// Called from the system (it's private: not accessible in the testing environment)
+  private override init() {
+    self.dependency = AppDependency.resolve()
+  }
 
-    // Configures window and rootViewController
-    self.window = self.dependency.window
-    self.window?.rootViewController = self.dependency.rootViewController
+  /// Called in a testing environment
+  init(dependency: AppDependency) {
+    self.dependency = dependency
+  }
+}
+```
+
+The app dependency can be used as the code below:
+
+```swift
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+  // inject rootViewController's dependency
+  if let viewController = self.window?.rootViewController as? RootViewController {
+    viewController.networking = self.dependency.networking
   }
 }
 
-// Test
-func setUp() {
-  let appDelegate = UIApplication.shared.delegate as? AppDelegate
-  let mockDependency = AppDependency(
-    window: UIWindow(),
-    rootViewController: MyViewController(otherDependency: MockOtherDependency())
-  )
-  appDelegate?.dependency = mockDependency
+func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+  // delegates remote notification receive event
+  self.dependency.remoteNotificationService.receiveRemoteNotification(userInfo)
 }
+```
+
+#### Testing AppDelegate
+
+`AppDelegate` is one of the most important class in a Cocoa application. It resolves an app dependency and handles app events. It can be easily tested as we separated the app dependency.
+
+This is an example test case of `AppDelegate`. It verifies that `AppDepegate` correctly injects root view controller's dependency in `application(_:didFinishLaunchingWithOptions)`.
+
+```swift
+class AppDelegateTests: XCTestCase {
+  func testInjectRootViewControllerDependencies() {
+    // given
+    let networking = MockNetworking()
+    let mockDependency = AppDependency(
+      networking: networking,
+      remoteNotificationService: MockRemoteNotificationService()
+    )
+    let appDelegate = AppDelegate(dependency: mockDependency)
+    appDelegate.window = UIWindow()
+    appDelegate.window?.rootViewController = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
+
+    // when
+    _ = appDelegate.application(.shared, didFinishLaunchingWithOptions: nil)
+
+    // then
+    let rootViewController = appDelegate.window?.rootViewController as? RootViewController
+    XCTAssertTrue(rootViewController?.networking === networking)
+  }
+}
+```
+
+You can write tests for verifying remote notification events, open url events and even an app termination event.
+
+#### Seaprating AppDelegate
+
+But there is a problem: `AppDelegate` is still created by the system while testing. It causes `AppDependency.resolve()` gets called so we have to use a fake app delegate class in a testing environment.
+
+First of all, create a new file in the test target. Define a new class named `TestAppDelegate` and implement basic requirements of the delegate protocol.
+
+```swift
+// iOS
+class TestAppDelegate: NSObject, UIApplicationDelegate {
+  var window: UIWindow?
+}
+
+// macOS
+class TestAppDelegate: NSObject, NSApplicationDelegate {
+}
+```
+
+Then create another file named **`main.swift`** to your application target. This file will replace the entry point of the application. We are going to provide different app delegates in this file. Don't forget to replace `"MyAppTests.TestAppDelegate"` with your project target and class name.
+
+```swift
+// iOS
+UIApplicationMain(
+  CommandLine.argc,
+  UnsafeMutableRawPointer(CommandLine.unsafeArgv).bindMemory(
+    to: UnsafeMutablePointer<Int8>.self,
+    capacity: Int(CommandLine.argc)
+  ),
+  NSStringFromClass(UIApplication.self),
+  NSStringFromClass(NSClassFromString("MyAppTests.TestAppDelegate") ?? AppDelegate.self)
+)
+
+// macOS
+func createAppDelegate() -> NSApplicationDelegate {
+  if let cls = NSClassFromString("AllkdicTests.TestAppDelegate") as? (NSObject & NSApplicationDelegate).Type {
+    return cls.init()
+  } else {
+    return AppDelegate(dependency: AppDependency.resolve())
+  }
+}
+
+let application = NSApplication.shared
+application.delegate = createAppDelegate()
+_ = NSApplicationMain(CommandLine.argc, CommandLine.unsafeArgv)
+```
+
+Finally, remove the `@UIApplicationMain` and `@NSApplicationMain` from the `AppDelegate`.
+
+```diff
+  // iOS
+- @UIApplicationMain
+  class AppDelegate: NSObject, UIApplicationDelegate
+
+  // macOS
+- @NSApplicationMain
+  class AppDelegate: NSObject, NSApplicationDelegate
+```
+
+It is also a good practice to add a test case to verify that the application is using `TestAppDelegate` in a testing environment.
+
+```swift
+XCTAssertTrue(UIApplication.shared.delegate is TestAppDelegate)
 ```
 
 ### Lazy Dependency
@@ -92,6 +201,7 @@ func setUp() {
 In Cocoa applications, view controllers are created lazily. For example, `DetailViewController` is not created until the user taps an item on `ListViewController`. In this case we have to pass a factory closure of `DetailViewController` to `ListViewController`.
 
 ```swift
+/// A root view controller
 class ListViewController {
   var detailViewControllerFactory: ((Item) -> DetailViewController)!
 
@@ -104,10 +214,8 @@ class ListViewController {
 static func resolve() -> AppDependency {
   let storyboard = UIStoryboard(name: "Main", bundle: nil)
   let networking = Networking()
-  let listViewController = storyboard.instantiateViewController(withIdentifier: "ListViewController") as! ListViewController
 
-  // Pass detailViewController factory
-  listViewController.detailViewControllerFactory = { selectedItem in
+  let detailViewControllerFactory: (Item) -> DetailViewController = { selectedItem in
     let detailViewController = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
     detailViewController.networking = networking
     detailViewController.item = selectedItem
@@ -115,8 +223,8 @@ static func resolve() -> AppDependency {
   }
 
   return AppDependency(
-    window: UIWindow(frame: UIScreen.main.bounds),
-    rootViewController: listViewController
+    networking: networking,
+    detailViewControllerFactory: detailViewControllerFactory
   )
 }
 ```
@@ -138,11 +246,11 @@ extension DetailViewController {
 }
 
 static func resolve() -> AppDependency {
-  let storybard = ...
+  let storyboard = ...
   let networking = ...
-  let listViewController = ...
-  listViewController.detailViewControllerFactory = DetailViewController.factory(storyboard, networking)
-  ...
+  return .init(
+    detailViewControllerFactory: DetailViewController.factory(storyboard, networking)
+  )
 }
 ```
 
@@ -364,15 +472,15 @@ static func resolve() -> AppDependency {
   let storybard = ...
   let networking = ...
   let imageDownloader = ...
-  let listViewController = ...
-  listViewController.detailViewControllerFactory = DetailViewController.Factory(dependency: .init(
-    storyboard: storyboard,
-    networking: networking,
-    itemCellConfigurator: ItemCell.Configurator(dependency: .init(
-      imageDownloader: imageDownloader
+  return .init(
+    detailViewControllerFactory: DetailViewController.Factory(dependency: .init(
+      storyboard: storyboard,
+      networking: networking,
+      itemCellConfigurator: ItemCell.Configurator(dependency: .init(
+        imageDownloader: imageDownloader
+      ))
     ))
-  ))
-  ...
+  )
 }
 ```
 
@@ -435,6 +543,8 @@ navigator.register("myapp://user/<id>", UserViewController.Factory().create)
     ```ruby
     pod 'Pure'
     ```
+
+* [Carthage](https://github.com/Carthage/Carthage) is not yet supported.
 
 ## Contribution
 
