@@ -229,7 +229,7 @@ static func resolve() -> AppDependency {
 }
 ```
 
-But it has a critical problem: we cannot test the factory closure. Because the factory closure is created in the Composition Root but the we should not access the Composition Root in a testing environment. What if I forget to inject the `DetailViewController.networking` property?
+But it has a critical problem: we cannot test the factory closure. Because the factory closure is created in the Composition Root but we should not access the Composition Root in a testing environment. What if I forget to inject the `DetailViewController.networking` property?
 
 One possible approach is to create a factory closure outside of the Composition Root. Note that `Storyboard` and `Networking` is from the Composition Root, and `Item` is from the previous view controller so we have to separate the scope.
 
@@ -548,7 +548,7 @@ navigator.register("myapp://user/<id>", UserViewController.Factory().create)
 
 ## Contribution
 
-Any discussions and pull requests are welcomed 💖 
+Any discussions and pull requests are welcomed 💖
 
 * To development:
 
