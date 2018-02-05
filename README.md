@@ -69,17 +69,19 @@ It is important to separate a production environment from a testing environment.
 AppDelegate is created automatically by the system using `init()`. In this initializer we're going to initialize the actaul app dependency with `AppDependency.resolve()`. On the other hand, we're going to provide a `init(dependency:)` to inject a mock app dependency in a testing environment.
 
 ```swift
-class AppDelegate: NSObject, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
   private let dependency: AppDependency
 
   /// Called from the system (it's private: not accessible in the testing environment)
   private override init() {
     self.dependency = AppDependency.resolve()
+    super.init()
   }
 
   /// Called in a testing environment
   init(dependency: AppDependency) {
     self.dependency = dependency
+    super.init()
   }
 }
 ```
@@ -181,7 +183,7 @@ Finally, remove the `@UIApplicationMain` and `@NSApplicationMain` from the `AppD
 ```diff
   // iOS
 - @UIApplicationMain
-  class AppDelegate: NSObject, UIApplicationDelegate
+  class AppDelegate: UIResponder, UIApplicationDelegate
 
   // macOS
 - @NSApplicationMain
