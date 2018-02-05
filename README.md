@@ -14,7 +14,7 @@ Pure makes [Pure DI](http://blog.ploeh.dk/2014/06/10/pure-di/) easy in Swift. Th
     * [Composition Root](#composition-root)
         * [AppDependency](#appdependency)
         * [Testing AppDelegate](#testing-appdelegate)
-        * [Seaprating AppDelegate](#separating-appdelegate)
+        * [Separating AppDelegate](#separating-appdelegate)
     * [Lazy Dependency](#lazy-dependency)
         * [Using Factory](#using-factory)
         * [Using Configurator](#using-configurator)
@@ -131,7 +131,7 @@ class AppDelegateTests: XCTestCase {
 
 You can write tests for verifying remote notification events, open url events and even an app termination event.
 
-#### Seaprating AppDelegate
+#### Separating AppDelegate
 
 But there is a problem: `AppDelegate` is still created by the system while testing. It causes `AppDependency.resolve()` gets called so we have to use a fake app delegate class in a testing environment.
 
