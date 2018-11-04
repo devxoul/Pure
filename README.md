@@ -156,10 +156,7 @@ Then create another file named **`main.swift`** to your application target. This
 // iOS
 UIApplicationMain(
   CommandLine.argc,
-  UnsafeMutableRawPointer(CommandLine.unsafeArgv).bindMemory(
-    to: UnsafeMutablePointer<Int8>.self,
-    capacity: Int(CommandLine.argc)
-  ),
+  CommandLine.unsafeArgv,
   NSStringFromClass(UIApplication.self),
   NSStringFromClass(NSClassFromString("MyAppTests.TestAppDelegate") ?? AppDelegate.self)
 )
