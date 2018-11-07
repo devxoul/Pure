@@ -525,7 +525,7 @@ class UserViewController {
 }
 
 extension Factory where Module == UserViewController {
-  func create(url: URLConvertble, values: [String: Any], context: Any?) -> Module? {
+  func create(url: URLConvertible, values: [String: Any], context: Any?) -> Module? {
     guard let userID = values["id"] else { return nil }
     return self.create(payload: .init(userID: userID))
   }
