@@ -1,6 +1,6 @@
 # Pure
 
-![Swift](https://img.shields.io/badge/Swift-4.2-orange.svg)
+![Swift](https://img.shields.io/badge/Swift-5.0-orange.svg)
 [![CocoaPods](http://img.shields.io/cocoapods/v/Pure.svg)](https://cocoapods.org/pods/Pure)
 [![Build Status](https://travis-ci.org/devxoul/Pure.svg?branch=master)](https://travis-ci.org/devxoul/Pure)
 [![Codecov](https://img.shields.io/codecov/c/github/devxoul/Pure.svg)](https://codecov.io/gh/devxoul/Pure)
