@@ -3,7 +3,7 @@ import Pure
 #endif
 
 public extension Configurator {
-  public static func stub(
+  static func stub(
     _ closure: @escaping StubConfigurator<Module>.Closure = { _, _ in }
   ) -> StubConfigurator<Module> {
     return StubConfigurator(closure: closure)
@@ -22,7 +22,7 @@ public final class StubConfigurator<Module: ConfiguratorModule>: Configurator<Mo
 
   fileprivate init(closure: @escaping Closure) {
     self.closure = closure
-    super.init(dependency: nil as Module.Dependency!)
+    super.init(dependency: (nil as Module.Dependency?)!)
   }
 
   override public func configure(_ module: Module, payload: Module.Payload) {
