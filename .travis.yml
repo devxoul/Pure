@@ -2,9 +2,9 @@ env:
   global:
     - PROJECT="Pure.xcodeproj"
     - SCHEME="Pure-Package"
-    - IOS_SDK="iphonesimulator11.4"
-    - MACOS_SDK="macosx10.13"
-    - TVOS_SDK="appletvsimulator11.4"
+    - IOS_SDK="iphonesimulator12.2"
+    - MACOS_SDK="macosx10.14"
+    - TVOS_SDK="appletvsimulator12.2"
     - FRAMEWORK="Pure"
 
 matrix:
@@ -16,29 +16,29 @@ matrix:
       env: TEST="spm"
 
     - os: osx
-      osx_image: xcode9.4
+      osx_image: xcode10.2
       language: objective-c
       env: TEST="spm"
 
     - os: osx
-      osx_image: xcode9.4
+      osx_image: xcode10.2
       language: objective-c
-      env: TEST="xcodebuild"  SDK="$IOS_SDK"    DESTINATION="platform=iOS Simulator,name=iPhone 8,OS=11.4"
+      env: TEST="xcodebuild"  SDK="$IOS_SDK"    DESTINATION="platform=iOS Simulator,name=iPhone 8,OS=12.2"
 
     - os: osx
-      osx_image: xcode9.4
+      osx_image: xcode10.2
       language: objective-c
       env: TEST="xcodebuild"  SDK="$MACOS_SDK"  DESTINATION="arch=x86_64"
 
     - os: osx
-      osx_image: xcode9.4
+      osx_image: xcode10.2
       language: objective-c
-      env: TEST="xcodebuild"  SDK="$TVOS_SDK"   DESTINATION="OS=11.4,name=Apple TV 4K"
+      env: TEST="xcodebuild"  SDK="$TVOS_SDK"   DESTINATION="OS=12.2,name=Apple TV 4K"
 
 install:
   - if [[ "$TEST" == "spm" ]]; then
       eval "$(curl -sL https://gist.githubusercontent.com/kylef/5c0475ff02b7c7671d2a/raw/9f442512a46d7a2af7b850d65a7e9bd31edfb09b/swiftenv-install.sh)";
-      swiftenv install swift-4.0 || true;
+      swiftenv install swift-5.0 || true;
     fi
   - swift --version
   - bundle install

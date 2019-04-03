@@ -10,21 +10,21 @@ public protocol ConfiguratorModule: class, Module {
 
 public extension ConfiguratorModule where Dependency == Void {
   /// Configures an existing module with a payload.
-  public func configure(payload: Payload) {
+  func configure(payload: Payload) {
     self.configure(dependency: Void(), payload: payload)
   }
 }
 
 public extension ConfiguratorModule where Payload == Void {
   /// Configures an existing module with a dependency.
-  public func configure(dependency: Dependency) {
+  func configure(dependency: Dependency) {
     self.configure(dependency: dependency, payload: Void())
   }
 }
 
 public extension ConfiguratorModule where Dependency == Void, Payload == Void {
   /// Configures an existing module.
-  public func configure() {
+  func configure() {
     self.configure(dependency: Void(), payload: Void())
   }
 }
