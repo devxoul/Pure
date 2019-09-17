@@ -4,9 +4,7 @@ open class Factory<Module: FactoryModule> {
   private let dependencyClosure: () -> Module.Dependency
 
   /// A static dependency of a module.
-  open var dependency: Module.Dependency {
-    return self.dependencyClosure()
-  }
+  open private(set) lazy var dependency: Module.Dependency = self.dependencyClosure()
 
   /// Creates an instance of `Factory`.
   ///

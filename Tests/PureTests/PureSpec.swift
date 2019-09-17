@@ -114,6 +114,23 @@ final class PureSpec: QuickSpec {
         expect(instance.dependency) == Void()
         expect(instance.payload) == Void()
       }
+
+      it("dependency should be initialized once") {
+        var dependencyInitializedCount = 0
+        let dependencyInitializer: () -> Dependency = {
+          dependencyInitializedCount += 1
+          return .init(
+            networking: "Networking B"
+          )
+        }
+        let factory = FactoryFixture<Dependency, Void>.Factory(dependency: dependencyInitializer())
+
+        for _ in 0..<4 {
+          _ = factory.create()
+        }
+
+        expect(dependencyInitializedCount) == 1
+      }
     }
 
     describe("a configurator") {
