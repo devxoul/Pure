@@ -2,21 +2,39 @@
   "object": {
     "pins": [
       {
-        "package": "Nimble",
-        "repositoryURL": "https://github.com/devxoul/Nimble.git",
+        "package": "CwlCatchException",
+        "repositoryURL": "https://github.com/mattgallagher/CwlCatchException.git",
         "state": {
-          "branch": "swift-5",
-          "revision": "8655fea1802b0c4269df31b14d1aadf2cd77b4e8",
-          "version": null
+          "branch": null,
+          "revision": "7cd2f8cacc4d22f21bc0b2309c3b18acf7957b66",
+          "version": "1.2.0"
+        }
+      },
+      {
+        "package": "CwlPreconditionTesting",
+        "repositoryURL": "https://github.com/mattgallagher/CwlPreconditionTesting.git",
+        "state": {
+          "branch": null,
+          "revision": "c228db5d2ad1b01ebc84435e823e6cca4e3db98b",
+          "version": "1.2.0"
+        }
+      },
+      {
+        "package": "Nimble",
+        "repositoryURL": "https://github.com/Quick/Nimble.git",
+        "state": {
+          "branch": null,
+          "revision": "6abeb3f5c03beba2b9e4dbe20886e773b5b629b6",
+          "version": "8.0.4"
         }
       },
       {
         "package": "Quick",
-        "repositoryURL": "https://github.com/devxoul/Quick.git",
+        "repositoryURL": "https://github.com/Quick/Quick.git",
         "state": {
-          "branch": "swift-5",
-          "revision": "98b15d63d8dcb41f025b662557ce785275fe3295",
-          "version": null
+          "branch": null,
+          "revision": "33682c2f6230c60614861dfc61df267e11a1602f",
+          "version": "2.2.0"
         }
       }
     ]
