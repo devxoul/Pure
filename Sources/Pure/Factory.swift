@@ -1,10 +1,30 @@
+import Foundation
+
 /// A generic factory. It is constructed with a static dependency and creates a module instance
 /// with a runtime parameter.
 open class Factory<Module: FactoryModule> {
   private let dependencyClosure: () -> Module.Dependency
 
   /// A static dependency of a module.
-  open private(set) lazy var dependency: Module.Dependency = self.dependencyClosure()
+  private let lock = NSLock()
+
+  private var cachedDependency: Module.Dependency?
+  open var dependency: Module.Dependency {
+    if let dependency = self.cachedDependency {
+      return dependency
+    }
+
+    self.lock.lock()
+    defer { self.lock.unlock() }
+
+    if let dependency = self.cachedDependency {
+      return dependency
+    }
+
+    let dependency = self.dependencyClosure()
+    self.cachedDependency = dependency
+    return dependency
+  }
 
   /// Creates an instance of `Factory`.
   ///
