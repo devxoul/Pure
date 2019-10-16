@@ -5,6 +5,7 @@
 #endif
 import Nimble
 import Quick
+import XCTest
 @testable import Pure
 @testable import TestSupport
 
@@ -187,6 +188,35 @@ final class PureSpec: QuickSpec {
 
         expect(dependencyInitializedCount) == 1
       }
+    }
+
+    it("is thread-safe") {
+      final class MyClass: FactoryModule {
+        static var dependencyInitializerExecutionCount = 0
+
+        struct Dependency {
+          init() {
+            MyClass.dependencyInitializerExecutionCount += 1
+            sleep(1)
+          }
+        }
+
+        struct Payload {
+        }
+
+        init(dependency: Dependency, payload: Payload) {
+        }
+      }
+
+      let factory = MyClass.Factory(dependency: .init())
+      for _ in 0..<100 {
+        DispatchQueue.global().async {
+          _ = factory.create(payload: .init())
+        }
+      }
+
+      XCTWaiter().wait(for: [XCTestExpectation()], timeout: 1)
+      expect(MyClass.dependencyInitializerExecutionCount) == 1
     }
   }
 }
