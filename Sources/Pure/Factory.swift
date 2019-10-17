@@ -3,12 +3,12 @@ import Foundation
 /// A generic factory. It is constructed with a static dependency and creates a module instance
 /// with a runtime parameter.
 open class Factory<Module: FactoryModule> {
-  private let dependencyClosure: () -> Module.Dependency
-
-  /// A static dependency of a module.
   private let lock = NSLock()
 
+  private let dependencyClosure: () -> Module.Dependency
   private var cachedDependency: Module.Dependency?
+
+  /// A static dependency of a module.
   open var dependency: Module.Dependency {
     self.lock.lock()
     defer { self.lock.unlock() }
