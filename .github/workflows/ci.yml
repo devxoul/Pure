@@ -42,7 +42,7 @@ jobs:
 
     - name: Generate Xcode Project
       if: matrix.env.test == 'xcodebuild'
-      run: make project
+      run: swift package generate-xcodeproj --enable-code-coverage
 
     - name: Build and Test with Xcode
       if: matrix.env.test == 'xcodebuild'

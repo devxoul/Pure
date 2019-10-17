@@ -55,9 +55,6 @@ GEM
     nap (1.1.0)
     netrc (0.11.0)
     ruby-macho (1.1.0)
-    swiftproj (0.1.0)
-      colored2 (>= 3.0)
-      xcodeproj (>= 1.5)
     thread_safe (0.3.6)
     tzinfo (1.2.4)
       thread_safe (~> 0.1)
@@ -72,7 +69,6 @@ PLATFORMS
 
 DEPENDENCIES
   cocoapods
-  swiftproj
 
 BUNDLED WITH
-   1.15.3
+   1.17.2
