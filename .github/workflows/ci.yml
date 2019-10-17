@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  test:
+    runs-on: macOS-latest
+    env:
+      PROJECT: Pure.xcodeproj
+      SCHEME: Pure-Package
+      IOS_SDK: iphonesimulator12.2
+      MACOS_SDK: macosx10.14
+      TVOS_SDK: appletvsimulator12.2
+      FRAMEWORK: Pure
+
+    strategy:
+      matrix:
+        env:
+          - test: spm
+
+          - test: xcodebuild
+            sdk: iphonesimulator13.0
+            destination: platform=iOS Simulator,name=iPhone 11 Pro,OS=13.0
+
+          - test: xcodebuild
+            sdk: macosx10.15
+            destination: arch=x86_64
+
+          - test: xcodebuild
+            sdk: appletvsimulator13.0
+            destination: OS=13.0,name=Apple TV
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Select Xcode
+      run: sudo xcode-select -s /Applications/Xcode_11.app
+
+    - name: Generate Xcode Project
+      if: matrix.env.test == 'xcodebuild'
+      run: swift package generate-xcodeproj --enable-code-coverage
+
+    - name: Build and Test with Xcode
+      if: matrix.env.test == 'xcodebuild'
+      run: |
+        set -o pipefail && xcodebuild clean build test \
+          -project "$PROJECT" \
+          -scheme "$SCHEME" \
+          -sdk "$SDK" \
+          -destination "$DESTINATION" \
+          -configuration Debug \
+          -enableCodeCoverage YES \
+          CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty -c; \
+      env:
+        SDK: ${{ matrix.env.sdk }}
+        DESTINATION: ${{ matrix.env.destination }}
+
+    - name: Build and Test with SPM
+      if: matrix.env.test == 'spm'
+      run: set -o pipefail && swift test
+
+    - name: Upload Code Coverage
+      run: |
+        bash <(curl -s https://codecov.io/bash) \
+          -X xcodeplist \
+          -J Pure
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
