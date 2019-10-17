@@ -10,10 +10,6 @@ open class Factory<Module: FactoryModule> {
 
   private var cachedDependency: Module.Dependency?
   open var dependency: Module.Dependency {
-    if let dependency = self.cachedDependency {
-      return dependency
-    }
-
     self.lock.lock()
     defer { self.lock.unlock() }
 
