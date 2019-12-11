@@ -106,7 +106,7 @@ func application(_ application: UIApplication, didReceiveRemoteNotification user
 
 `AppDelegate` is one of the most important class in a Cocoa application. It resolves an app dependency and handles app events. It can be easily tested as we separated the app dependency.
 
-This is an example test case of `AppDelegate`. It verifies that `AppDepegate` correctly injects root view controller's dependency in `application(_:didFinishLaunchingWithOptions)`.
+This is an example test case of `AppDelegate`. It verifies that `AppDelegate` correctly injects root view controller's dependency in `application(_:didFinishLaunchingWithOptions)`.
 
 ```swift
 class AppDelegateTests: XCTestCase {
