@@ -10,11 +10,5 @@ import UIKit
 
 final class ImageCell: UICollectionViewCell {
 
-    @IBOutlet private weak var imageView: UIImageView!
-
-    static let configurator: () -> (ImageCell, UIImage) -> Void = {
-        return { cell, image in
-            cell.imageView.image = image
-        }
-    }
+    @IBOutlet weak var imageView: UIImageView!
 }

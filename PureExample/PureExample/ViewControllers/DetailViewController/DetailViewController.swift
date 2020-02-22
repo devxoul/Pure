@@ -14,7 +14,7 @@ final class DetailViewController: UIViewController {
 
     var networking: Networking!
     var item: Item!
-    var imageCellConfigurator: ((ImageCell, UIImage) -> Void)?
+    var imageCellConfigurator: ImageCell.Configurator!
     var images: [UIImage] = []
 
     // MARK: - IBOutlets
@@ -22,6 +22,7 @@ final class DetailViewController: UIViewController {
     @IBOutlet private weak var collectionView: UICollectionView!
 
     // MARK: - Life cycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupCollectionView()
@@ -29,6 +30,7 @@ final class DetailViewController: UIViewController {
     }
 
     // MARK: - Private helpers
+
     private func setupCollectionView() {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
@@ -51,7 +53,7 @@ final class DetailViewController: UIViewController {
     }
 
     private func loadImages() {
-        networking.loadImages(for: item, completion: { (images) in
+        self.networking.loadImages(for: self.item, completion: { (images) in
             self.images = images
             self.collectionView.reloadData()
         })
@@ -77,28 +79,11 @@ extension DetailViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         let image = self.images[indexPath.row]
-        self.imageCellConfigurator?(cell, image)
+        self.imageCellConfigurator.configure(cell, payload: .init(image: image))
         return cell
     }
 }
 
-// MARK: - Factory -
-extension DetailViewController {
-
-    static let factory: (
-        Networking,
-        @escaping (ImageCell, UIImage) -> Void
-        ) -> (Item) -> DetailViewController = {
-        (networking, imageCellConfigurator) in
-        return { selectedItem in
-            let detailViewController = DetailViewController.loadFromStoryboard()
-            detailViewController.networking = networking
-            detailViewController.item = selectedItem
-            detailViewController.imageCellConfigurator = imageCellConfigurator
-            return detailViewController
-        }
-    }
-}
-
 // MARK: - StoryboardLoadable -
+
 extension DetailViewController: StoryboardLoadable {}

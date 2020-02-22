@@ -25,7 +25,7 @@
 		35D1C53A23FECEAA00BEC341 /* ImageDownloaderType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D1C53923FECEAA00BEC341 /* ImageDownloaderType.swift */; };
 		35D1C54123FED90300BEC341 /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D1C53F23FED90300BEC341 /* ItemCell.swift */; };
 		35D1C54223FED90300BEC341 /* ItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 35D1C54023FED90300BEC341 /* ItemCell.xib */; };
-		35D1C54523FEF9E600BEC341 /* Pure in Frameworks */ = {isa = PBXBuildFile; productRef = 35D1C54423FEF9E600BEC341 /* Pure */; };
+		35D6A0A823FF2DF1006837D0 /* Pure in Frameworks */ = {isa = PBXBuildFile; productRef = 35D6A0A723FF2DF1006837D0 /* Pure */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +49,7 @@
 		35D1C53923FECEAA00BEC341 /* ImageDownloaderType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloaderType.swift; sourceTree = "<group>"; };
 		35D1C53F23FED90300BEC341 /* ItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
 		35D1C54023FED90300BEC341 /* ItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ItemCell.xib; sourceTree = "<group>"; };
+		35D6A0A523FF2DA8006837D0 /* Pure */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Pure; path = ..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,7 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35D1C54523FEF9E600BEC341 /* Pure in Frameworks */,
+				35D6A0A823FF2DF1006837D0 /* Pure in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,8 +67,10 @@
 		3556F57823FDC36600C775E1 = {
 			isa = PBXGroup;
 			children = (
+				35D6A0A523FF2DA8006837D0 /* Pure */,
 				3556F58323FDC36600C775E1 /* PureExample */,
 				3556F58223FDC36600C775E1 /* Products */,
+				35D6A0A623FF2DF1006837D0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -177,6 +180,13 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		35D6A0A623FF2DF1006837D0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -194,7 +204,7 @@
 			);
 			name = PureExample;
 			packageProductDependencies = (
-				35D1C54423FEF9E600BEC341 /* Pure */,
+				35D6A0A723FF2DF1006837D0 /* Pure */,
 			);
 			productName = PureExample;
 			productReference = 3556F58123FDC36600C775E1 /* PureExample.app */;
@@ -225,7 +235,6 @@
 			);
 			mainGroup = 3556F57823FDC36600C775E1;
 			packageReferences = (
-				35D1C54323FEF9E600BEC341 /* XCRemoteSwiftPackageReference "Pure" */,
 			);
 			productRefGroup = 3556F58223FDC36600C775E1 /* Products */;
 			projectDirPath = "";
@@ -465,21 +474,9 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		35D1C54323FEF9E600BEC341 /* XCRemoteSwiftPackageReference "Pure" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/devxoul/Pure";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
-		35D1C54423FEF9E600BEC341 /* Pure */ = {
+		35D6A0A723FF2DF1006837D0 /* Pure */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 35D1C54323FEF9E600BEC341 /* XCRemoteSwiftPackageReference "Pure" */;
 			productName = Pure;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -26,7 +26,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = UIWindow(windowScene: scene)
         guard let window = self.window else { return }
         
-        window.rootViewController = appDelegate.dependency.listViewControllerFactory()
+        let factory = appDelegate.dependency.listViewControllerFactory
+        window.rootViewController = factory.create()
         window.makeKeyAndVisible()
     }
 }

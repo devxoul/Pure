@@ -7,15 +7,14 @@
 //
 
 import UIKit
-import Pure
 
 final class ListViewController: UIViewController {
 
     // MARK: - Properties
-
+    
     var networking: Networking!
     var notificationsService: RemoteNotificationService!
-    var detailViewControllerFactory: ((Item) -> DetailViewController)!
+    var factory: DetailViewController.Factory!
     var items: [Item] = []
 
     // MARK: - IBOutlets
@@ -60,7 +59,9 @@ final class ListViewController: UIViewController {
     }
     
     private func presentItemDetail(_ selectedItem: Item) {
-        let detailViewController = self.detailViewControllerFactory(selectedItem)
+        let detailViewController = self.factory.create(
+            payload: DetailViewController.Payload(selectedItem: selectedItem)
+        )
         self.present(detailViewController, animated: true)
     }
 }
@@ -97,23 +98,6 @@ extension ListViewController: UITableViewDataSource {
     }
 }
 
-// MARK: - Factory -
-
-extension ListViewController {
-
-    static let factory: (
-        Networking,
-        RemoteNotificationService,
-        @escaping (Item) -> DetailViewController
-        ) -> ListViewController = {
-            (networking, notificationsService, detailViewControllerFactory) in
-            let listViewController = ListViewController.loadFromStoryboard()
-            listViewController.networking = networking
-            listViewController.notificationsService = notificationsService
-            listViewController.detailViewControllerFactory = detailViewControllerFactory
-            return listViewController
-    }
-}
 
 // MARK: - StoryboardLoadable -
 
