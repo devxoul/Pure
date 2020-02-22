@@ -12,7 +12,7 @@ import Pure
 final class ListViewController: UIViewController {
 
     // MARK: - Properties
-
+    
     var networking: Networking!
     var notificationsService: RemoteNotificationService!
     var detailViewControllerFactory: ((Item) -> DetailViewController)!
@@ -91,7 +91,7 @@ extension ListViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath) as? ItemCell else {
             return UITableViewCell()
         }
-        let item = items[indexPath.row]
+        let item = self.items[indexPath.row]
         cell.label?.text = item.name
         return cell
     }

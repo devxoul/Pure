@@ -29,15 +29,6 @@
         }
       },
       {
-        "package": "Pure",
-        "repositoryURL": "https://github.com/devxoul/Pure",
-        "state": {
-          "branch": "master",
-          "revision": "28fc9d2f9231ae6deeabc27bbd9cb648bd73311f",
-          "version": null
-        }
-      },
-      {
         "package": "Quick",
         "repositoryURL": "https://github.com/Quick/Quick.git",
         "state": {

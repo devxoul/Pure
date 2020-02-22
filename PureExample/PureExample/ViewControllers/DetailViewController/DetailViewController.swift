@@ -29,6 +29,7 @@ final class DetailViewController: UIViewController {
     }
 
     // MARK: - Private helpers
+    
     private func setupCollectionView() {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
@@ -51,7 +52,7 @@ final class DetailViewController: UIViewController {
     }
 
     private func loadImages() {
-        networking.loadImages(for: item, completion: { (images) in
+        self.networking.loadImages(for: self.item, completion: { (images) in
             self.images = images
             self.collectionView.reloadData()
         })
