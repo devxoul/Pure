@@ -49,7 +49,7 @@ jobs:
           -destination "$DESTINATION" \
           -configuration Debug \
           -enableCodeCoverage YES \
-          CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty -c; \
+          CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty -c;
       env:
         SDK: ${{ matrix.env.sdk }}
         DESTINATION: ${{ matrix.env.destination }}
