@@ -2,7 +2,7 @@
 
 ![Swift](https://img.shields.io/badge/Swift-5.0-orange.svg)
 [![CocoaPods](http://img.shields.io/cocoapods/v/Pure.svg)](https://cocoapods.org/pods/Pure)
-[![Build Status](https://travis-ci.org/devxoul/Pure.svg?branch=master)](https://travis-ci.org/devxoul/Pure)
+[![Build Status](https://github.com/devxoul/Pure/workflows/CI/badge.svg)](https://github.com/devxoul/Pure/actions)
 [![Codecov](https://img.shields.io/codecov/c/github/devxoul/Pure.svg)](https://codecov.io/gh/devxoul/Pure)
 
 Pure makes [Pure DI](http://blog.ploeh.dk/2014/06/10/pure-di/) easy in Swift. This repository also introduces a way to do Pure DI in a Swift application.
