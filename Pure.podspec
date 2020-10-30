@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "Pure"
-  s.version          = "1.1.3"
+  s.version          = "1.1.4"
   s.summary          = "Pure DI for Swift"
   s.homepage         = "https://github.com/devxoul/Pure"
   s.license          = { :type => "MIT", :file => "LICENSE" }
