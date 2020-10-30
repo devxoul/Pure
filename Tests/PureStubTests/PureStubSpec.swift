@@ -19,6 +19,17 @@ final class PureStubSpec: QuickSpec {
         expect(instance.dependency.networking) == "Networking A"
         expect(instance.payload.id) == 200
       }
+
+      it("returns a stubbed instance with Void payload") {
+        let factory: FactoryFixture<Dependency, Void>.Factory = .stub { payload in
+          FactoryFixture<Dependency, Void>(
+            dependency: .init(networking: "Networking A"),
+            payload: payload
+          )
+        }
+        let instance = factory.create()
+        expect(instance.dependency.networking) == "Networking A"
+      }
     }
 
     describe("StubFactory.create(_ instance:)") {
@@ -32,6 +43,17 @@ final class PureStubSpec: QuickSpec {
         expect(instance1) === instance2
         expect(instance2.dependency.networking) == "Networking A"
         expect(instance2.payload.id) == 100
+      }
+
+      it("returns a stubbed instance with Void payload") {
+        let instance1 = FactoryFixture<Dependency, Void>(
+          dependency: .init(networking: "Networking A"),
+          payload: Void()
+        )
+        let factory: FactoryFixture<Dependency, Void>.Factory = .stub(instance1)
+        let instance2 = factory.create()
+        expect(instance1) === instance2
+        expect(instance2.dependency.networking) == "Networking A"
       }
     }
 
