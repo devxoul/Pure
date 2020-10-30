@@ -1,4 +1,4 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.2
 
 import PackageDescription
 
@@ -9,7 +9,7 @@ let package = Package(
   ],
   products: [.library(name: "Pure", targets: ["Pure"])],
   dependencies: [
-    .package(url: "https://github.com/Quick/Quick.git", .upToNextMajor(from: "3.0.0")),
+    .package(name: "Quick", url: "https://github.com/Quick/Quick.git", .branch("quickobjcruntime-umbrella-header")),
     .package(url: "https://github.com/Quick/Nimble.git", .upToNextMajor(from: "8.0.0")),
   ],
   targets: [
