@@ -40,7 +40,7 @@ open class Factory<Module: FactoryModule> {
 public extension Factory where Module.Payload == Void {
   /// Creates an instance of a module.
   func create() -> Module {
-    return Module.init(dependency: self.dependency, payload: Void())
+    self.create(payload: Void())
   }
 }
 
