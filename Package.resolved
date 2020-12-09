@@ -14,9 +14,9 @@
         "package": "Quick",
         "repositoryURL": "https://github.com/Quick/Quick.git",
         "state": {
-          "branch": null,
-          "revision": "0038bcbab4292f3b028632556507c124e5ba69f3",
-          "version": "3.0.0"
+          "branch": "quickobjcruntime-umbrella-header",
+          "revision": "201151b82a7aa8c5b3bf1af79816fb12a4bac03a",
+          "version": null
         }
       }
     ]
