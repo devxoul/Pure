@@ -247,5 +247,73 @@ final class PureSpec: QuickSpec {
         expect(MyClass.dependencyInitializerExecutionCount) == 1
       }
     }
+
+    describe("a generic factory") {
+      it("creates an instance with a dependency and a payload") {
+        let factory = GenericFactoryFixtureProtocol.Factory(GenericFactoryFixture.init, dependency: .init(
+          networking: "Networking A"
+        ))
+        let instance = factory.create(payload: (id: 100, username: "A"))
+        expect(instance.networking) == "Networking A"
+        expect(instance.id) == 100
+        expect(instance.username) == "A"
+      }
+
+      it("creates an instance with a dependency when the module doesn't require a payload") {
+        let factory = GenericFactoryNoPayloadFixtureProtocol.Factory(GenericFactoryNoPayloadFixture.init, dependency: .init(
+          networking: "Networking B"
+        ))
+        let instance = factory.create()
+        expect(instance.networking) == "Networking B"
+      }
+
+      it("dependency should be initialized once") {
+        var dependencyInitializedCount = 0
+        let dependencyInitializer: () -> GenericFactoryFixture.Dependency = {
+          dependencyInitializedCount += 1
+          return .init(
+            networking: "Networking B"
+          )
+        }
+        let factory = GenericFactoryFixtureProtocol.Factory(GenericFactoryFixture.init, dependency: dependencyInitializer())
+
+        for _ in 0..<4 {
+          _ = factory.create(payload: (id: 100, username: "A"))
+        }
+
+        expect(dependencyInitializedCount) == 1
+      }
+
+      it("is thread-safe") {
+        let factory = GenericFactoryThreadSafetyFixtureProtocol.Factory(GenericFactoryThreadSafetyFixture.init, dependency: .init())
+        for _ in 0..<100 {
+          DispatchQueue.global().async {
+            _ = factory.create()
+          }
+        }
+
+        XCTWaiter().wait(for: [XCTestExpectation()], timeout: 1)
+        expect(GenericFactoryThreadSafetyFixture.dependencyInitializerExecutionCount) == 1
+      }
+    }
+  }
+}
+
+private protocol GenericFactoryThreadSafetyFixtureProtocol {
+  typealias Factory = GenericFactory<GenericFactoryThreadSafetyFixtureProtocol, Payload>
+  typealias Payload = Void
+}
+
+private final class GenericFactoryThreadSafetyFixture: GenericFactoryThreadSafetyFixtureProtocol {
+  static var dependencyInitializerExecutionCount = 0
+
+  struct Dependency {
+    init() {
+      GenericFactoryThreadSafetyFixture.dependencyInitializerExecutionCount += 1
+      sleep(1)
+    }
+  }
+
+  init(dependency: Dependency, payload: Payload) {
   }
 }
