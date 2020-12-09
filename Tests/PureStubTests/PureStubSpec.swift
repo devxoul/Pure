@@ -9,8 +9,8 @@ final class PureStubSpec: QuickSpec {
   override func spec() {
     describe("StubFactory.create(_ closure:)") {
       it("returns a stubbed instance") {
-        let factory: FactoryFixture<SharedDependency, Payload>.Factory = .stub { payload in
-          FactoryFixture<SharedDependency, Payload>(
+        let factory: FactoryFixture<SharedDependency, SharedPayload>.Factory = .stub { payload in
+          FactoryFixture<SharedDependency, SharedPayload>(
             dependency: .init(networking: "Networking A"),
             payload: payload
           )
@@ -34,11 +34,11 @@ final class PureStubSpec: QuickSpec {
 
     describe("StubFactory.create(_ instance:)") {
       it("returns a stubbed instance") {
-        let instance1 = FactoryFixture<SharedDependency, Payload>(
+        let instance1 = FactoryFixture<SharedDependency, SharedPayload>(
           dependency: .init(networking: "Networking A"),
           payload: .init(id: 100)
         )
-        let factory: FactoryFixture<SharedDependency, Payload>.Factory = .stub(instance1)
+        let factory: FactoryFixture<SharedDependency, SharedPayload>.Factory = .stub(instance1)
         let instance2 = factory.create(payload: .init(id: 200))
         expect(instance1) === instance2
         expect(instance2.dependency.networking) == "Networking A"
@@ -59,16 +59,16 @@ final class PureStubSpec: QuickSpec {
 
     describe("StubConfigurator.create()") {
       it("doesn't configure an instance without a closure parameter") {
-        let instance = ConfiguratorFixture<SharedDependency, Payload>()
-        let configurator: ConfiguratorFixture<SharedDependency, Payload>.Configurator = .stub()
+        let instance = ConfiguratorFixture<SharedDependency, SharedPayload>()
+        let configurator: ConfiguratorFixture<SharedDependency, SharedPayload>.Configurator = .stub()
         configurator.configure(instance, payload: .init(id: 100))
         expect(instance.dependency).to(beNil())
         expect(instance.payload).to(beNil())
       }
 
       it("configures an instance with a closure parameter") {
-        let instance = ConfiguratorFixture<SharedDependency, Payload>()
-        let configurator: ConfiguratorFixture<SharedDependency, Payload>.Configurator = .stub() { module, _ in
+        let instance = ConfiguratorFixture<SharedDependency, SharedPayload>()
+        let configurator: ConfiguratorFixture<SharedDependency, SharedPayload>.Configurator = .stub() { module, _ in
           module.dependency = .init(networking: "Networking B")
           module.payload = .init(id: 200)
         }

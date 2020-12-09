@@ -7,7 +7,7 @@ struct SharedDependency {
   }
 }
 
-struct Payload {
+struct SharedPayload {
   let id: Int
   init(id: Int) {
     self.id = id

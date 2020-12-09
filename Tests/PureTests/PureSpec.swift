@@ -13,7 +13,7 @@ final class PureSpec: QuickSpec {
   override func spec() {
     describe("a factory module") {
       it("creates an instance with a dependency and a payload") {
-        let instance = FactoryFixture<SharedDependency, Payload>(
+        let instance = FactoryFixture<SharedDependency, SharedPayload>(
           dependency: .init(networking: "Networking A"),
           payload: .init(id: 100)
         )
@@ -30,7 +30,7 @@ final class PureSpec: QuickSpec {
       }
 
       it("creates an instance with a payload when the module doesn't require a dependency") {
-        let instance = FactoryFixture<Void, Payload>(
+        let instance = FactoryFixture<Void, SharedPayload>(
           payload: .init(id: 200)
         )
         expect(instance.dependency) == Void()
@@ -55,7 +55,7 @@ final class PureSpec: QuickSpec {
 
     describe("a configurator module") {
       it("configures an instance with a dependency and a payload") {
-        let instance = ConfiguratorFixture<SharedDependency, Payload>()
+        let instance = ConfiguratorFixture<SharedDependency, SharedPayload>()
         instance.configure(dependency: .init(networking: "Networking A"), payload: .init(id: 100))
         expect(instance.dependency?.networking) == "Networking A"
         expect(instance.payload?.id) == 100
@@ -69,7 +69,7 @@ final class PureSpec: QuickSpec {
       }
 
       it("configures an instance with a payload when the module doesn't require a dependency") {
-        let instance = ConfiguratorFixture<Void, Payload>()
+        let instance = ConfiguratorFixture<Void, SharedPayload>()
         instance.configure(payload: .init(id: 200))
         expect(instance.dependency) == Void()
         expect(instance.payload?.id) == 200
@@ -85,7 +85,7 @@ final class PureSpec: QuickSpec {
 
     describe("a factory") {
       it("creates an instance with a dependency and a payload") {
-        let factory = FactoryFixture<SharedDependency, Payload>.Factory(dependency: .init(
+        let factory = FactoryFixture<SharedDependency, SharedPayload>.Factory(dependency: .init(
           networking: "Networking A"
         ))
         let instance = factory.create(payload: .init(id: 100))
@@ -103,7 +103,7 @@ final class PureSpec: QuickSpec {
       }
 
       it("creates an instance with a payload when the module doesn't require a dependency") {
-        let factory = FactoryFixture<Void, Payload>.Factory()
+        let factory = FactoryFixture<Void, SharedPayload>.Factory()
         let instance = factory.create(payload: .init(id: 200))
         expect(instance.dependency) == Void()
         expect(instance.payload.id) == 200
@@ -165,8 +165,8 @@ final class PureSpec: QuickSpec {
 
     describe("a configurator") {
       it("configures an instance with a dependency and a payload") {
-        let instance = ConfiguratorFixture<SharedDependency, Payload>()
-        let configurator = ConfiguratorFixture<SharedDependency, Payload>.Configurator(dependency: .init(
+        let instance = ConfiguratorFixture<SharedDependency, SharedPayload>()
+        let configurator = ConfiguratorFixture<SharedDependency, SharedPayload>.Configurator(dependency: .init(
           networking: "Networking A"
         ))
         configurator.configure(instance, payload: .init(id: 100))
@@ -185,8 +185,8 @@ final class PureSpec: QuickSpec {
       }
 
       it("configures an instance with a payload when the module doesn't require a dependency") {
-        let instance = ConfiguratorFixture<Void, Payload>()
-        let configurator = ConfiguratorFixture<Void, Payload>.Configurator()
+        let instance = ConfiguratorFixture<Void, SharedPayload>()
+        let configurator = ConfiguratorFixture<Void, SharedPayload>.Configurator()
         configurator.configure(instance, payload: .init(id: 200))
         expect(instance.dependency) == Void()
         expect(instance.payload?.id) == 200
