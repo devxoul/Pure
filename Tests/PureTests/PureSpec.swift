@@ -13,7 +13,7 @@ final class PureSpec: QuickSpec {
   override func spec() {
     describe("a factory module") {
       it("creates an instance with a dependency and a payload") {
-        let instance = FactoryFixture<Dependency, Payload>(
+        let instance = FactoryFixture<SharedDependency, Payload>(
           dependency: .init(networking: "Networking A"),
           payload: .init(id: 100)
         )
@@ -22,7 +22,7 @@ final class PureSpec: QuickSpec {
       }
 
       it("creates an instance with a dependency when the module doesn't require a payload") {
-        let instance = FactoryFixture<Dependency, Void>(
+        let instance = FactoryFixture<SharedDependency, Void>(
           dependency: .init(networking: "Networking B")
         )
         expect(instance.dependency.networking) == "Networking B"
@@ -55,14 +55,14 @@ final class PureSpec: QuickSpec {
 
     describe("a configurator module") {
       it("configures an instance with a dependency and a payload") {
-        let instance = ConfiguratorFixture<Dependency, Payload>()
+        let instance = ConfiguratorFixture<SharedDependency, Payload>()
         instance.configure(dependency: .init(networking: "Networking A"), payload: .init(id: 100))
         expect(instance.dependency?.networking) == "Networking A"
         expect(instance.payload?.id) == 100
       }
 
       it("configures an instance with a dependency when the module doesn't require a payload") {
-        let instance = ConfiguratorFixture<Dependency, Void>()
+        let instance = ConfiguratorFixture<SharedDependency, Void>()
         instance.configure(dependency: .init(networking: "Networking B"))
         expect(instance.dependency?.networking) == "Networking B"
         expect(instance.payload) == Void()
@@ -85,7 +85,7 @@ final class PureSpec: QuickSpec {
 
     describe("a factory") {
       it("creates an instance with a dependency and a payload") {
-        let factory = FactoryFixture<Dependency, Payload>.Factory(dependency: .init(
+        let factory = FactoryFixture<SharedDependency, Payload>.Factory(dependency: .init(
           networking: "Networking A"
         ))
         let instance = factory.create(payload: .init(id: 100))
@@ -94,7 +94,7 @@ final class PureSpec: QuickSpec {
       }
 
       it("creates an instance with a dependency when the module doesn't require a payload") {
-        let factory = FactoryFixture<Dependency, Void>.Factory(dependency: .init(
+        let factory = FactoryFixture<SharedDependency, Void>.Factory(dependency: .init(
           networking: "Networking B"
         ))
         let instance = factory.create()
@@ -118,13 +118,13 @@ final class PureSpec: QuickSpec {
 
       it("dependency should be initialized once") {
         var dependencyInitializedCount = 0
-        let dependencyInitializer: () -> Dependency = {
+        let dependencyInitializer: () -> SharedDependency = {
           dependencyInitializedCount += 1
           return .init(
             networking: "Networking B"
           )
         }
-        let factory = FactoryFixture<Dependency, Void>.Factory(dependency: dependencyInitializer())
+        let factory = FactoryFixture<SharedDependency, Void>.Factory(dependency: dependencyInitializer())
 
         for _ in 0..<4 {
           _ = factory.create()
@@ -165,8 +165,8 @@ final class PureSpec: QuickSpec {
 
     describe("a configurator") {
       it("configures an instance with a dependency and a payload") {
-        let instance = ConfiguratorFixture<Dependency, Payload>()
-        let configurator = ConfiguratorFixture<Dependency, Payload>.Configurator(dependency: .init(
+        let instance = ConfiguratorFixture<SharedDependency, Payload>()
+        let configurator = ConfiguratorFixture<SharedDependency, Payload>.Configurator(dependency: .init(
           networking: "Networking A"
         ))
         configurator.configure(instance, payload: .init(id: 100))
@@ -175,8 +175,8 @@ final class PureSpec: QuickSpec {
       }
 
       it("configures an instance with a dependency when the module doesn't require a payload") {
-        let instance = ConfiguratorFixture<Dependency, Void>()
-        let configurator = ConfiguratorFixture<Dependency, Void>.Configurator(dependency: .init(
+        let instance = ConfiguratorFixture<SharedDependency, Void>()
+        let configurator = ConfiguratorFixture<SharedDependency, Void>.Configurator(dependency: .init(
           networking: "Networking B"
         ))
         configurator.configure(instance)
@@ -202,14 +202,14 @@ final class PureSpec: QuickSpec {
 
       it("dependency should be initialized once") {
         var dependencyInitializedCount = 0
-        let dependencyInitializer: () -> Dependency = {
+        let dependencyInitializer: () -> SharedDependency = {
           dependencyInitializedCount += 1
           return .init(
             networking: "Networking B"
           )
         }
-        let instance = ConfiguratorFixture<Dependency, Void>()
-        let configurator = ConfiguratorFixture<Dependency, Void>.Configurator(dependency: dependencyInitializer())
+        let instance = ConfiguratorFixture<SharedDependency, Void>()
+        let configurator = ConfiguratorFixture<SharedDependency, Void>.Configurator(dependency: dependencyInitializer())
 
         for _ in 0..<4 {
           configurator.configure(instance)

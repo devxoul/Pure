@@ -1,6 +1,6 @@
 import Pure
 
-struct Dependency {
+struct SharedDependency {
   let networking: String
   init(networking: String) {
     self.networking = networking
