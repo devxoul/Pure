@@ -489,7 +489,7 @@ static func resolve() -> AppDependency {
 
 ```swift
 extension Factory where Module == DetailViewController {
-  func create(payload: Module.Payload, extraValue: ExtraValue) -> Payload {
+  func create(payload: Module.Payload, extraValue: ExtraValue) -> Module {
     let module = self.create(payload: payload)
     module.extraValue = extraValue
     return module
@@ -503,7 +503,7 @@ extension Factory where Module == DetailViewController {
 
 ```swift
 extension Factory where Module == DetailViewController {
-  func create(payload: Module.Payload) -> Payload {
+  func create(payload: Module.Payload) -> Module {
     let module = self.dependency.storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! Module
     module.networking = dependency.networking
     module.itemCellConfigurator = dependency.itemCellConfigurator
