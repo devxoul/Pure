@@ -1,5 +1,5 @@
 /// A module that can be configurated with an existing instance.
-public protocol ConfiguratorModule: class, Module {
+public protocol ConfiguratorModule: AnyObject, Module {
 
   /// A configurator for `Self`.
   associatedtype Configurator = Pure.Configurator<Self>

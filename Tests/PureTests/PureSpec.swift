@@ -239,7 +239,7 @@ final class PureSpec: QuickSpec {
         let configurator = MyClass.Configurator(dependency: .init())
         for _ in 0..<100 {
           DispatchQueue.global().async {
-            _ = configurator.configure(MyClass(), payload: .init())
+            configurator.configure(MyClass(), payload: .init())
           }
         }
 
