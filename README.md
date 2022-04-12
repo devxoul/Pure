@@ -39,7 +39,7 @@ Pure makes [Pure DI](http://blog.ploeh.dk/2014/06/10/pure-di/) easy in Swift. Th
 
 ### Composition Root
 
-The Composion Root is where the entire object graph is resolved. In a Cocoa application, `AppDelegate` is the Composition Root.
+The Composition Root is where the entire object graph is resolved. In a Cocoa application, `AppDelegate` is the Composition Root.
 
 #### AppDependency
 
@@ -66,7 +66,7 @@ extension AppDependency {
 
 It is important to separate a production environment from a testing environment. We have to use an actual object in a production environment and a mock object in a testing environment.
 
-AppDelegate is created automatically by the system using `init()`. In this initializer we're going to initialize the actaul app dependency with `AppDependency.resolve()`. On the other hand, we're going to provide a `init(dependency:)` to inject a mock app dependency in a testing environment.
+AppDelegate is created automatically by the system using `init()`. In this initializer we're going to initialize the actual app dependency with `AppDependency.resolve()`. On the other hand, we're going to provide a `init(dependency:)` to inject a mock app dependency in a testing environment.
 
 ```swift
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -273,7 +273,7 @@ class ItemCell {
 }
 ```
 
-This cell is displayed in `DetailViewController `. `DetailViewController` should inject `imageDownloader` to the cell and sets the `image` property. Like we did in the factory, we can create a configurator closure for it. But this closure takes an existing instance and doens't have a return value.
+This cell is displayed in `DetailViewController `. `DetailViewController` should inject `imageDownloader` to the cell and sets the `image` property. Like we did in the factory, we can create a configurator closure for it. But this closure takes an existing instance and doesn't have a return value.
 
 ```swift
 class ItemCell {
@@ -286,7 +286,7 @@ class ItemCell {
 }
 ```
 
-`DetailViewController` can have the configurator and use it when configurating cell.
+`DetailViewController` can have the configurator and use it when configuring cell.
 
 ```swift
 class DetailViewController {
